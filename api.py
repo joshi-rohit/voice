@@ -6,15 +6,18 @@ from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
 from typing import Dict, Callable
 
-from deepgram import Deepgram
+from deepgram import DeepgramClient, DeepgramClientOptions
 from dotenv import load_dotenv
+import os
 
 load_dotenv()
 
 app = FastAPI()
 
 templates = Jinja2Templates(directory="templates")
-dg_client = Deepgram(os.getenv('DEEPGRAM_API_KEY'))
+
+config = DeepgramClientOptions(options={"keepalive": "true"})
+dg_client = DeepgramClient(os.getenv('DEEPGRAM_API_KEY'), config)
 
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
@@ -26,8 +29,8 @@ async def websocket_endpoint(websocket: WebSocket):
 
     try:
         while True:
-            data = await websocket.receive_text()
-            # data = await websocket.receive_bytes()
+            #data = await websocket.receive_text()
+            data = await websocket.receive_bytes()
             # await websocket.send_text(f"Message text was: {data}")
     except Exception as e:
         print(e)
