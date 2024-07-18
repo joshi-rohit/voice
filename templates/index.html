@@ -15,6 +15,7 @@
                 console.log({ event: 'onopen' })
                 mediaRecorder.addEventListener('dataavailable', async (event) => {
                     if (event.data.size > 0 && socket.readyState == 1) {
+                        console.log("sending data")
                         socket.send(event.data)
                     }
                 })
@@ -23,10 +24,14 @@
         
         
             socket.onmessage = (message) => {
-                const received = message.data
+                const received = JSON.parse(message.data)
                 if (received) {
                     console.log(received)
-                    document.querySelector('#transcript').textContent += ' ' + received
+                    const transcript = received.channel.alternatives[0].transcript
+                    if (transcript && received.is_final) {
+                        console.log(transcript)
+                    }
+                    document.querySelector('#transcript').textContent += ' ' + transcript
                 }
             }
         
