@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Live Transcription</title>
+    <script>
+        navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+          const mediaRecorder = new MediaRecorder(stream)
+        })
+    </script>
+    <script> 
+        const socket = new WebSocket('ws://localhost:8000/listen')
+    </script>
+  </head>
+  <body>
+    <h1>Transcribe Audio With FastAPI</h1>
+    <p id="status">Connection status will go here</p>
+    <p id="transcript"></p>
+  </body>
+</html>
